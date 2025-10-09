@@ -56,7 +56,7 @@ function App() {
                         onChange={() => setSelectedIndex(index)}
                       />
                       <label className="form-check-label" htmlFor={`firmware-${index}`}>
-                        {manifest.name} ({manifest.version})
+                        {manifest.name} (Version: {manifest.version})
                       </label>
                     </div>
                   ))}

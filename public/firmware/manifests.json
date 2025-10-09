@@ -1,3 +1,50 @@
 [
-   
+    {
+        "name": "bst/blc06mk1",
+        "version": "0.3.27",
+        "new_install_prompt_erase": true,
+        "builds": [
+            {
+                "chipFamily": "ESP32-C3",
+                "parts": [
+                    {
+                        "path": "/firmware/bst-blc06mk1_firmware_ce_v0.3.27.bin",
+                        "offset": 0
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "name": "bst/ulva6",
+        "version": "0.3.27",
+        "new_install_prompt_erase": true,
+        "builds": [
+            {
+                "chipFamily": "ESP32-C3",
+                "parts": [
+                    {
+                        "path": "/firmware/bst-ulva6_firmware_ce_v0.3.27.bin",
+                        "offset": 0
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "name": "bst/xiaoc3",
+        "version": "0.3.27",
+        "new_install_prompt_erase": true,
+        "builds": [
+            {
+                "chipFamily": "ESP32-C3",
+                "parts": [
+                    {
+                        "path": "/firmware/bst-xiaoc3_firmware_ce_v0.3.27.bin",
+                        "offset": 0
+                    }
+                ]
+            }
+        ]
+    }
 ]

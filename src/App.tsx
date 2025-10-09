@@ -65,7 +65,6 @@ function App() {
               )}
               {selectedManifest && (
                 <div className="mt-3">
-                  {/* @ts-expect-error */}
                   <esp-web-install-button
                     manifest={(() => {
                       const json = JSON.stringify(selectedManifest);

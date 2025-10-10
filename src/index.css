@@ -1,6 +1,3 @@
-@import 'bootstrap/dist/css/bootstrap.min.css';
-
-:root {
-  --bs-primary: #63568f;
-  --bs-primary-rgb: 99, 86, 143;
+#root {
+  background-color: #eeeeee;
 }

@@ -16,6 +16,7 @@ import {
     TableHead,
     TableRow,
     Paper,
+    Divider,
 } from '@mui/material';
 import { Language, MenuBook, GitHub, Usb } from '@mui/icons-material';
 
@@ -78,23 +79,23 @@ function App() {
 
             <Box component="main" sx={{ flexGrow: 1, py: 3, px: 3, maxWidth: '960px', mx: 'auto', width: '100%' }}>
                 <Card elevation={2} sx={{ p: 3, mb: 3, width: '100%' }}>
-
                     <Typography variant="body1" paragraph>
                         Welcome to the Borneo-IoT open-source firmware flashing tool! Please connect a compatible device to this computer, select your device model, and click Connect to start flashing.
                     </Typography>
+                    <Divider/>
 
                     {manifests.length > 0 && (
                         <Box sx={{ mb: 3 }}>
-                            <Typography variant="h6" sx={{ mb: 2 }}>Select Firmware:</Typography>
                             <TableContainer component={Paper}>
                                 <Table size="small">
                                     <TableHead>
                                         <TableRow>
-                                            <TableCell align="center" sx={{ width: '60px' }}>Select</TableCell>
-                                            <TableCell align="left" sx={{ minWidth: '150px' }}>Board Name</TableCell>
-                                            <TableCell align="left" sx={{ minWidth: '120px' }}>Manufacturer</TableCell>
-                                            <TableCell align="left" sx={{ minWidth: '120px' }}>Product ID</TableCell>
-                                            <TableCell align="center" sx={{ width: '80px' }}>Version</TableCell>
+                                            <TableCell align="center">Select</TableCell>
+                                            <TableCell align="left">Name</TableCell>
+                                            <TableCell align="left">Board</TableCell>
+                                            <TableCell align="left">Manufacturer</TableCell>
+                                            <TableCell align="left">Product ID</TableCell>
+                                            <TableCell align="center">Version</TableCell>
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
@@ -110,6 +111,7 @@ function App() {
                                                         onChange={() => setSelectedIndex(index)}
                                                     />
                                                 </TableCell>
+                                                <TableCell align="left">{manifest.name}</TableCell>
                                                 <TableCell align="left">{manifest.board_name}</TableCell>
                                                 <TableCell align="left">{manifest.manufacturer}</TableCell>
                                                 <TableCell align="left">{manifest.product_id}</TableCell>

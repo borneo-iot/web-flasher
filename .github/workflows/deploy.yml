@@ -27,9 +27,9 @@ jobs:
 
           mkdir -p tmp_firmware
 
-          cd tmp_firmware
-          git checkout origin/firmware_ce -- .
-          cd ..
+          git archive --format=tar --output=tmp_firmware.tar origin/firmware_ce 2>/dev/null || true
+          tar -xf tmp_firmware.tar -C tmp_firmware 2>/dev/null || true
+          rm -f tmp_firmware.tar
 
           rm -rf public/firmware/*
           mv tmp_firmware/*.bin public/firmware/ 2>/dev/null || true

@@ -2,11 +2,7 @@ import { useState, useEffect } from 'react';
 import {
     Typography,
     Box,
-    RadioGroup,
-    FormControlLabel,
     Radio,
-    FormControl,
-    FormLabel,
     // Paper, (unused)
     AppBar,
     Toolbar,
@@ -14,6 +10,13 @@ import {
     Divider,
     Button,
     Card,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow,
+    Paper,
 } from '@mui/material';
 import { Language, MenuBook, GitHub, Usb } from '@mui/icons-material';
 
@@ -81,39 +84,47 @@ function App() {
                         Welcome to the Borneo-IoT open-source firmware flashing tool! Please connect a compatible device to this computer, select your device model, and click Connect to start flashing.
                     </Typography>
 
-                    <Alert severity="info" sx={{ mb: 3 }}>
-                        <Typography variant="body2">
-                            <strong>Note:</strong> This tool is only needed for flashing firmware on brand new devices or devices that need to be reset. Once the firmware is written, you can use OTA (Over-The-Air) updates for future upgrades.
-                        </Typography>
-                    </Alert>
-
                     {manifests.length > 0 && (
                         <Box sx={{ mb: 3 }}>
-                            <FormControl component="fieldset">
-                                <FormLabel component="legend">
-                                    <Typography variant="h6">Select Firmware:</Typography>
-                                </FormLabel>
-                                <RadioGroup
-                                    value={selectedIndex?.toString() || ''}
-                                    onChange={(event) => setSelectedIndex(parseInt(event.target.value))}
-                                >
-                                    {manifests.map((manifest, index) => (
-                                        <FormControlLabel
-                                            key={index}
-                                            value={index.toString()}
-                                            control={<Radio />}
-                                            label={`${manifest.name} (Version: ${manifest.version})`}
-                                        />
-                                    ))}
-                                </RadioGroup>
-                            </FormControl>
+                            <Typography variant="h6" sx={{ mb: 2 }}>Select Firmware:</Typography>
+                            <TableContainer component={Paper}>
+                                <Table size="small">
+                                    <TableHead>
+                                        <TableRow>
+                                            <TableCell align="center" sx={{ width: '60px' }}>Select</TableCell>
+                                            <TableCell align="left" sx={{ minWidth: '150px' }}>Board Name</TableCell>
+                                            <TableCell align="left" sx={{ minWidth: '120px' }}>Manufacturer</TableCell>
+                                            <TableCell align="left" sx={{ minWidth: '120px' }}>Product ID</TableCell>
+                                            <TableCell align="center" sx={{ width: '80px' }}>Version</TableCell>
+                                        </TableRow>
+                                    </TableHead>
+                                    <TableBody>
+                                        {manifests.map((manifest, index) => (
+                                            <TableRow
+                                                key={index}
+                                                onClick={() => setSelectedIndex(index)}
+                                                sx={{ cursor: 'pointer', '&:hover': { backgroundColor: 'action.hover' } }}
+                                            >
+                                                <TableCell align="center">
+                                                    <Radio
+                                                        checked={selectedIndex === index}
+                                                        onChange={() => setSelectedIndex(index)}
+                                                    />
+                                                </TableCell>
+                                                <TableCell align="left">{manifest.board_name}</TableCell>
+                                                <TableCell align="left">{manifest.manufacturer}</TableCell>
+                                                <TableCell align="left">{manifest.product_id}</TableCell>
+                                                <TableCell align="center">{manifest.version}</TableCell>
+                                            </TableRow>
+                                        ))}
+                                    </TableBody>
+                                </Table>
+                            </TableContainer>
                         </Box>
                     )}
 
-                    <Divider />
-
                     {selectedManifest && (
-                        <Box sx={{ mt: 3 }}>
+                        <Box sx={{ mt: 3, display: 'flex', alignItems: 'flex-start', gap: 2 }}>
                             <esp-web-install-button
                                 manifest={(() => {
                                     const json = JSON.stringify(selectedManifest);
@@ -138,6 +149,11 @@ function App() {
                                     </div>
                                 </Box>
                             </esp-web-install-button>
+                            <Alert severity="info" sx={{ flex: 1 }}>
+                                <Typography variant="body2">
+                                    <strong>Note:</strong> This tool is only needed for flashing firmware on brand new devices or devices that need to be reset. Once the firmware is written, you can use OTA (Over-The-Air) updates for future upgrades.
+                                </Typography>
+                            </Alert>
                         </Box>
                     )}
                 </Card>

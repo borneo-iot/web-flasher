@@ -26,6 +26,8 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Download firmware from releases
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           # Ensure public/firmware directory exists
           mkdir -p public/firmware

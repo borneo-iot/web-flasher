@@ -2,7 +2,7 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [ "master", "firmware_ce" ]
+    branches: [ "master" ]
   workflow_dispatch:
 
 permissions:
@@ -14,6 +14,10 @@ concurrency:
   group: "pages"
   cancel-in-progress: false
 
+env:
+  FIRMWARE_REPO: borneo-iot/borneo
+  FIRMWARE_TAG: release-fw-latest
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -21,21 +25,22 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Fetch firmware branch
+      - name: Download firmware from releases
         run: |
-          git fetch origin firmware_ce
+          # Ensure public/firmware directory exists
+          mkdir -p public/firmware
 
-          mkdir -p tmp_firmware
+          # Get the firmware release info
+          RELEASE_INFO=$(gh api repos/${{ env.FIRMWARE_REPO }}/releases/tags/${{ env.FIRMWARE_TAG }})
 
-          git archive --format=tar --output=tmp_firmware.tar origin/firmware_ce 2>/dev/null || true
-          tar -xf tmp_firmware.tar -C tmp_firmware 2>/dev/null || true
-          rm -f tmp_firmware.tar
+          # Extract asset download URLs, excluding .zip and .tar.gz files
+          ASSET_URLS=$(echo "$RELEASE_INFO" | jq -r '.assets[] | select(.name | test("\\.(zip|tar\\.gz)$") | not) | .browser_download_url')
 
-          rm -rf public/firmware/*
-          mv tmp_firmware/*.bin public/firmware/ 2>/dev/null || true
-          mv tmp_firmware/*.json public/firmware/ 2>/dev/null || true
-
-          rm -rf tmp_firmware
+          # Download each asset to public/firmware
+          for url in $ASSET_URLS; do
+            echo "Downloading $url"
+            curl -L -o "public/firmware/$(basename "$url")" "$url"
+          done
 
       - name: Setup Node.js
         uses: actions/setup-node@v4

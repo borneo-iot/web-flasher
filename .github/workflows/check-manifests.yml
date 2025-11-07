@@ -1,0 +1,65 @@
+name: Check firmware manifests and trigger deploy
+
+on:
+  schedule:
+    # Runs daily at 01:00 UTC by default. Change this cron to your preferred time.
+    - cron: '0 1 * * *'
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+  actions: write
+
+jobs:
+  compare-and-dispatch:
+    name: Compare manifests and dispatch deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download manifests and compare
+        id: compare
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          GH_URL="https://github.com/borneo-iot/borneo/releases/download/release-fw-latest/manifests.json"
+          REMOTE_URL="https://flasher.borneoiot.com/firmware/manifests.json"
+
+          echo "Downloading manifests from GitHub release: $GH_URL"
+          curl -fsSL "$GH_URL" -o gh-manifest.json
+
+          echo "Downloading manifests from flasher site: $REMOTE_URL"
+          curl -fsSL "$REMOTE_URL" -o remote-manifest.json
+
+          echo "Normalizing JSON (sort keys)"
+          jq -S . gh-manifest.json > gh-manifest.sorted.json
+          jq -S . remote-manifest.json > remote-manifest.sorted.json
+
+          echo "Computing checksums"
+          GH_SUM=$(sha256sum gh-manifest.sorted.json | cut -d' ' -f1)
+          REMOTE_SUM=$(sha256sum remote-manifest.sorted.json | cut -d' ' -f1)
+
+          echo "GitHub manifest sha256: $GH_SUM"
+          echo "Remote manifest sha256: $REMOTE_SUM"
+
+          if [ "$GH_SUM" = "$REMOTE_SUM" ]; then
+            echo "Manifests are identical — nothing to do."
+            echo "changed=false" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+
+          echo "Manifests differ — will dispatch deployment workflow."
+          echo "changed=true" >> $GITHUB_OUTPUT
+
+      - name: Trigger deploy workflow via REST API
+        if: steps.compare.outputs.changed == 'true'
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          echo "Dispatching deploy.yml on ref 'master'"
+          curl -sS -X POST "https://api.github.com/repos/${{ github.repository }}/actions/workflows/deploy.yml/dispatches" \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer $GITHUB_TOKEN" \
+            -H "Content-Type: application/json" \
+            -d '{"ref":"master"}'

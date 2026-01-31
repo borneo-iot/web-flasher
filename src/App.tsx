@@ -20,6 +20,8 @@ import {
 } from '@mui/material';
 import { Language, MenuBook, GitHub, Usb } from '@mui/icons-material';
 
+const VERSION = __APP_VERSION__;
+
 function App() {
     const [manifests, setManifests] = useState<any[]>([]);
     const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
@@ -161,6 +163,9 @@ function App() {
             </Box>
 
             <Box component="footer" sx={{ bgcolor: 'grey.900', color: 'white', p: 3, textAlign: 'center' }}>
+                <Typography variant="body2">
+                    Version {VERSION}
+                </Typography>
                 <Typography variant="body2">
                     Copyright &copy; {new Date().getFullYear()} Yunnan BinaryStars Technologies, Co., Ltd. All rights reserved.
                 </Typography>

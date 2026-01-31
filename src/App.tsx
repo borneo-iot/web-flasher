@@ -25,7 +25,7 @@ function App() {
     const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
 
     useEffect(() => {
-        fetch('/firmware/manifests.json')
+        fetch('/firmware/manifests.json?v=' + Date.now())
             .then(response => response.json())
             .then(data => {
                 // Update paths to absolute URLs
@@ -35,7 +35,7 @@ function App() {
                         ...build,
                         parts: build.parts.map((part: any) => ({
                             ...part,
-                            path: window.location.origin + part.path
+                            path: window.location.origin + part.path + '?v=' + Date.now()
                         }))
                     }))
                 }));

@@ -98,6 +98,7 @@ function App() {
                                             <TableCell align="left">Manufacturer</TableCell>
                                             <TableCell align="left">Product ID</TableCell>
                                             <TableCell align="center">Version</TableCell>
+                                            <TableCell align="left">Updated</TableCell>
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
@@ -118,6 +119,7 @@ function App() {
                                                 <TableCell align="left">{manifest.manufacturer}</TableCell>
                                                 <TableCell align="left">{manifest.product_id}</TableCell>
                                                 <TableCell align="center">{manifest.version}</TableCell>
+                                                <TableCell align="left">{(manifest.timestamp != null && !isNaN(manifest.timestamp)) ? new Date(manifest.timestamp).toLocaleString() : 'N/A'}</TableCell>
                                             </TableRow>
                                         ))}
                                     </TableBody>

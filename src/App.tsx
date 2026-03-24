@@ -95,7 +95,7 @@ function App() {
                                             <TableCell align="center">Select</TableCell>
                                             <TableCell align="left">Name</TableCell>
                                             <TableCell align="left">Board</TableCell>
-                                            <TableCell align="left">Manufacturer</TableCell>
+                                            <TableCell align="left">Vendor</TableCell>
                                             <TableCell align="left">Product ID</TableCell>
                                             <TableCell align="center">Version</TableCell>
                                             <TableCell align="left">Updated</TableCell>
@@ -116,7 +116,7 @@ function App() {
                                                 </TableCell>
                                                 <TableCell align="left">{manifest.name}</TableCell>
                                                 <TableCell align="left">{manifest.board_name}</TableCell>
-                                                <TableCell align="left">{manifest.manufacturer}</TableCell>
+                                                <TableCell align="left">{manifest.vendor}</TableCell>
                                                 <TableCell align="left">{manifest.product_id}</TableCell>
                                                 <TableCell align="center">{manifest.version}</TableCell>
                                                 <TableCell align="left">{(manifest.timestamp != null && !isNaN(manifest.timestamp)) ? new Date(manifest.timestamp).toLocaleString() : 'N/A'}</TableCell>

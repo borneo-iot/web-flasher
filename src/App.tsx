@@ -169,7 +169,10 @@ function App() {
                     Version {VERSION}
                 </Typography>
                 <Typography variant="body2">
-                    Copyright &copy; {new Date().getFullYear()} Yunnan BinaryStars Technologies, Co., Ltd. All rights reserved.
+                    Copyright &copy; {new Date().getFullYear()} <Typography component="a" href="https://www.binarystarstech.com/en/" target="_blank" rel="noreferrer" variant="body2" sx={{ color: 'inherit', textDecoration: 'underline' }}>
+                        Yunnan BinaryStars Technologies, Co., Ltd.
+                    </Typography>{' '}
+                    All rights reserved.
                 </Typography>
             </Box>
         </Box>

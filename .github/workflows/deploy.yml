@@ -35,8 +35,8 @@ jobs:
           # Get the firmware release info
           RELEASE_INFO=$(gh api repos/${{ env.FIRMWARE_REPO }}/releases/tags/${{ env.FIRMWARE_TAG }})
 
-          # Extract asset names and download URLs, excluding .zip and .gz files
-          ASSETS=$(echo "$RELEASE_INFO" | jq -r '.assets[] | select(.name | test("\\.(zip|gz)$") | not) | [.name, .browser_download_url] | @tsv')
+          # Extract asset names and download URLs, keeping only firmware manifests and binaries
+          ASSETS=$(echo "$RELEASE_INFO" | jq -r '.assets[] | select(.name | endswith(".bin") or endswith(".bin.gz") or endswith(".manifest.json")) | [.name, .browser_download_url] | @tsv')
 
           # Download each asset to public/firmware
           while IFS=$'\t' read -r asset_name asset_url; do

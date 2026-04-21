@@ -35,19 +35,19 @@ jobs:
           # Get the firmware release info
           RELEASE_INFO=$(gh api repos/${{ env.FIRMWARE_REPO }}/releases/tags/${{ env.FIRMWARE_TAG }})
 
-          # Extract asset download URLs, including firmware binaries and manifest indexes
-          ASSET_URLS=$(echo "$RELEASE_INFO" | jq -r '.assets[] | select(.name == "manifests.json" or (.name | endswith(".bin")) or (.name | endswith(".bin.gz")) or (.name | endswith(".manifest.json"))) | .browser_download_url')
+          # Extract asset names and download URLs, including firmware binaries and manifest indexes
+          ASSETS=$(echo "$RELEASE_INFO" | jq -r '.assets[] | select(.name == "manifests.json" or (.name | endswith(".bin")) or (.name | endswith(".bin.gz")) or (.name | endswith(".manifest.json"))) | [.name, .browser_download_url] | @tsv')
 
-          if [ -z "$ASSET_URLS" ]; then
+          if [ -z "$ASSETS" ]; then
             echo "No firmware assets matched the allowlist." >&2
             echo "$RELEASE_INFO" | jq -r '.assets[].name' >&2
             exit 1
           fi
 
-          # Download each asset to public/firmware
-          for url in $ASSET_URLS; do
-            echo "Downloading $url"
-            curl -L -o "public/firmware/$(basename "$url")" "$url"
+          # Download each asset using its original release filename
+          echo "$ASSETS" | while IFS=$'\t' read -r name url; do
+            echo "Downloading $name"
+            curl -fL -o "public/firmware/$name" "$url"
           done
 
       - name: Setup Node.js
